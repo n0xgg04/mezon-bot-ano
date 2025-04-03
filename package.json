@@ -1,0 +1,19 @@
+{
+  "name": "fumo",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "scripts": {
+    "dev": "bun run --watch src/main.ts",
+    "start": "bun run src/main.ts"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "mezon-sdk": "^2.7.83",
+    "reflect-metadata": "^0.2.2"
+  }
+}
