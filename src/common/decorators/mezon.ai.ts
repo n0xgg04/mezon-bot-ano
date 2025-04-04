@@ -2,25 +2,26 @@ import { MezonClient } from "mezon-sdk";
 import "reflect-metadata";
 import { ReflectKeys } from "./constants";
 
+export let globalMezon: MezonClient;
 export function MezonBot(key: string): ClassDecorator {
   return (target: any) => {
-    target.prototype.mezon = new MezonClient(key);
+    globalMezon = new MezonClient(key);
   };
 }
 
 export async function startBot(target: any) {
-  const mezon = target.prototype.mezon;
+  const mezon = globalMezon;
 
-  const instance = new target();
-  const metadata = Reflect.getMetadata(ReflectKeys.EVENTS, instance);
   if (await mezon.authenticate()) {
-    instance.onBotStart(mezon);
   } else {
     throw new Error("Failed to authenticate");
   }
-
+  const instance = new target();
+  const metadata = Reflect.getMetadata(ReflectKeys.EVENTS, instance);
+  //Load events
   for (const event of metadata) {
     mezon.on(event.on, event.callback);
   }
   console.log("[LOADED] Events loaded");
+  instance.onBotStart(mezon);
 }
